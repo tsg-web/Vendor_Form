@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Form</title>
+  <style>
+    /* Base & Layout Styles */
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+    }
+
+    body {
+      padding: 20px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Page container sized for US Letter (8.5in x 11in) */
+    .page {
+      background: #ffffff;
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      position: relative; /* Anchor for absolute positioning */
+      box-sizing: border-box;
+    }
+
+    /* Form Layout inside Page */
+    #vendor-form {
+      display: flex;
+      flex-direction: column;
+      min-height: 11in;
+      width: 100%;
+    }
+
+    /* Full-Bleed Header Banner */
+    .header-banner {
+      background-color: #d8edf5;
+      padding: 12px 0.4in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+
+    .brand-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-logo .logo-img {
+      height: 85px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-logo .logo-script {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-style: italic;
+      font-size: 42px;
+      font-weight: normal;
+      color: #3e444a;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo .logo-subtext {
+      font-size: 9px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #3e444a;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .header-banner h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #4a5056;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Full-Bleed Footer Banner */
+    .footer-banner {
+      background-color: #d8edf5;
+      padding: 16px 0.4in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-top: auto;
+      font-size: 13px;
+      color: #3e444a;
+      box-sizing: border-box;
+    }
+
+    .footer-banner .footer-phone {
+      margin-left: 0;
+    }
+
+    .footer-banner .footer-link {
+      margin-right: 0;
+      color: #3e444a;
+      text-decoration: none;
+    }
+
+    /* Form Content Container */
+    .form-content {
+      padding: 0 0.4in;
+      flex: 1 0 auto;
+      margin-bottom: 20px;
+    }
+
+    /* Form Fields Grid Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.span-2 {
+      grid-column: span 2;
+    }
+
+    .form-group.span-3 {
+      grid-column: span 3;
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    label .required-mark {
+      color: #dc3545;
+      margin-left: 2px;
+    }
+
+    input, select {
+      padding: 6px 8px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      width: 100%;
+    }
+
+    select {
+      background-color: #fff;
+      appearance: auto;
+      -webkit-appearance: menulist;
+    }
+
+    input:focus, select:focus {
+      border-color: #0066cc;
+    }
+
+    /* Required-field validation error state */
+    .field-error {
+      border-color: #dc3545 !important;
+      background-color: #fff5f5 !important;
+    }
+
+    /* Dynamic Form Additions Styles */
+    .section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #3e444a;
+      text-transform: uppercase;
+      border-bottom: 2px solid #d8edf5;
+      padding-bottom: 4px;
+      margin-top: 15px;
+      margin-bottom: 12px;
+    }
+
+    .drop-zone {
+      border: 2px dashed #a2c4d3;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      background-color: #f9fbfd;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .drop-zone.dragover {
+      background-color: #e6f3f8;
+      border-color: #0066cc;
+    }
+
+    .drop-zone p {
+      margin: 0 0 6px 0;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .drop-zone span {
+      font-size: 10px;
+      color: #888;
+    }
+
+    .file-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .file-item {
+      background-color: #eef6ff;
+      border: 1px solid #bcdcff;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .file-item .remove-file {
+      color: #dc3545;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      height: 100%;
+      padding-top: 4px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: normal;
+      text-transform: none;
+      cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+
+    /* Itemized Data Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    td input, td select {
+      border: none;
+      padding: 2px 4px;
+      border-radius: 0;
+    }
+
+    td input:focus, td select:focus {
+      background-color: #eef6ff;
+    }
+
+    /* Auto-shrink text field (used for Item Description) — the input's
+       white-space is forced to nowrap so the shrink calculation via
+       scrollWidth is meaningful; without nowrap the browser would just
+       wrap text instead of overflowing, and scrollWidth would never
+       exceed clientWidth. */
+    .autofit-text {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Actions Bar */
+    .actions-bar {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-add { background-color: #28a745; color: white; }
+    .btn-download-all { background-color: #0066cc; color: white; }
+    .btn-remove { background-color: #dc3545; color: white; padding: 2px 6px; font-size: 11px; }
+    .btn-print { background-color: #6c757d; color: white; margin-left: auto; }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .bottom-actions-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 25px 0 10px 0;
+    }
+
+    .bottom-actions-bar .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .bottom-actions-bar .btn-print,
+    .bottom-actions-bar .btn-download-all {
+      margin-left: 0;
+    }
+
+    .submit-status {
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .submit-status.error { color: #dc3545; }
+    .submit-status.ok { color: #28a745; }
+
+    /* Summary Totals Section */
+    .summary-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .summary-table {
+      width: 380px;
+      border-collapse: collapse;
+    }
+
+    .summary-table td {
+      padding: 4px 8px;
+      font-weight: bold;
+    }
+
+    .summary-table td:first-child {
+      text-align: right;
+      background-color: #f9f9f9;
+      font-size: 11px;
+    }
+
+    .summary-table td:last-child {
+      text-align: right;
+      width: 140px;
+    }
+
+    .summary-table input {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    /* AUTO-FIT TO ONE PAGE: values come from CSS variables set by applyFit() */
+    .page[data-fit] .header-banner { margin-bottom: var(--fit-gap); }
+    .page[data-fit] .form-grid { gap: var(--fit-gap) 16px; margin-bottom: var(--fit-gap); }
+    .page[data-fit] .form-content { margin-bottom: var(--fit-gap); transform-origin: top left; }
+    .page[data-fit] #items-table { margin-bottom: var(--fit-gap); }
+    .page[data-fit] #items-table th,
+    .page[data-fit] #items-table td {
+      padding: var(--fit-pad) 6px;
+      font-size: var(--fit-font);
+      line-height: 1.15;
+    }
+    .page[data-fit] #items-table td input,
+    .page[data-fit] #items-table td select {
+      font-size: var(--fit-font);
+      line-height: 1.15;
+    }
+    .page[data-fit] .summary-container { margin: 0; }
+    .page[data-fit] .summary-table td {
+      padding: var(--fit-sum-pad) 8px;
+      font-size: var(--fit-sum-font);
+      line-height: 1.15;
+    }
+    .page[data-fit] .summary-table input {
+      font-size: var(--fit-sum-font);
+      line-height: 1.15;
+    }
+
+    /* PRINT & PDF GENERATION STYLES */
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 0;
+      }
+
+      html, body {
+        background: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .page {
+        box-shadow: none;
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+        position: relative;
+      }
+
+      #vendor-form {
+        height: 100vh;
+      }
+
+      .footer-banner {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+      }
+
+      .header-banner, .footer-banner {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      input, select {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      th, td {
+        border-color: #666;
+      }
+    }
+
+    /* PDF CAPTURE MODE (screen, not print)
+       Applied temporarily to .page only while html2canvas rasterizes it
+       for "Download All Files", so that capture matches the physical
+       11in page the exact same way @media print does: footer pinned to
+       the true bottom (not flex-pushed), borderless inputs. Without this,
+       the footer stayed in normal flex flow and could push the total
+       rendered height a little past 11in, which is what was spawning a
+       near-blank trailing page. */
+    .page.pdf-capture-mode {
+      height: 11in;
+    }
+
+    .page.pdf-capture-mode .footer-banner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .page.pdf-capture-mode input,
+    .page.pdf-capture-mode select {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <form id="vendor-form" onsubmit="return false;">
+      <!-- Header Banner -->
+      <div class="header-banner">
+        <div class="brand-logo">
+          <img class="logo-img" src="data:image/png;base64,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" alt="Belo Medical Group">
+        </div>
+        <h1>Vendor Form</h1>
+      </div>
+
+      <!-- Main Form Content -->
+      <div class="form-content">
+        <!-- Header Information -->
+        <div class="form-grid">
+          <div class="form-group span-2">
+            <label for="vendor">Vendor<span class="required-mark">*</span></label>
+            <input type="text" id="vendor" name="vendor" placeholder="Enter vendor name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tin">TIN<span class="required-mark">*</span></label>
+            <input type="text" id="tin" name="tin" placeholder="000-000-000-000" required>
+          </div>
+
+          <div class="form-group">
+            <label for="invoice-no">Invoice Number<span class="required-mark">*</span></label>
+            <input type="text" id="invoice-no" name="invoice_no" required>
+          </div>
+
+          <div class="form-group">
+            <label for="dr-no">DR No.</label>
+            <input type="text" id="dr-no" name="dr_no">
+          </div>
+
+          <div class="form-group">
+            <label for="po-no">PO No.</label>
+            <input type="text" id="po-no" name="po_no">
+          </div>
+
+          <div class="form-group">
+            <label for="invoice-date">Invoice Date<span class="required-mark">*</span></label>
+            <input type="date" id="invoice-date" name="invoice_date" required>
+          </div>
+
+          <div class="form-group span-2">
+            <label for="branch">Branch/es</label>
+            <select id="branch" name="branch">
+              <option value="">   </option>
+              <option value="Head Office">HEAD OFFICE</option>
+              <option value="Alabang">ALABANG</option>
+              <option value="Cebu">CEBU</option>
+              <option value="Clark">CLARK</option>
+              <option value="Conrad">CONRAD</option>
+              <option value="Davao">DAVAO</option>
+              <option value="Greenbelt">GREENBELT</option>
+              <option value="Greenhills">GREENHILLS</option>
+              <option value="Shang">SHANG</option>
+              <option value="Megamall">MEGAMALL</option>
+              <option value="One Ayala">ONE AYALA</option>
+              <option value="Proscenium">PROSCENIUM</option>
+              <option value="Rockwell">ROCKWELL</option>
+              <option value="The Fort">THE FORT</option>
+              <option value="Tomas Morato">TOMAS MORATO</option>
+              <option value="Trinoma">TRINOMA</option>
+              <option value="Whse-scm">WHSE - SCM</option>
+              <option value="Whse-Operation">WHSE - OPERATIONS</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action Control Bar -->
+        <div class="actions-bar no-print">
+          <button type="button" class="btn btn-add" onclick="addRow()">+ Add Line Item</button>
+        </div>
+
+        <!-- Itemized Table -->
+        <table id="items-table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">Qty<span class="required-mark">*</span></th>
+              <th style="width: 10%;">Unit<span class="required-mark">*</span></th>
+              <th style="width: 32%;">Item Description<span class="required-mark">*</span></th>
+              <th style="width: 10%;">Currency<span class="required-mark">*</span></th>
+              <th style="width: 12%;">Unit Price<span class="required-mark">*</span></th>
+              <th style="width: 11%;">Discount</th>
+              <th style="width: 13%;">Amount</th>
+              <th class="no-print" style="width: 4%;"></th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Dynamic rows insert here -->
+          </tbody>
+        </table>
+
+        <!-- Global Descriptions List for Table Selection -->
+        
+        <!-- Totals Summary Section -->
+        <div class="summary-container">
+          <table class="summary-table">
+            <tr>
+              <td>Vatable Sales:</td>
+              <td><input type="text" id="vatable-sales" name="vatable_sales" placeholder="0.00" readonly></td>
+            </tr>
+            <tr>
+              <td>VAT-Exempt Sales:</td>
+              <td><input type="text" id="vat-exempt-sales" name="vat_exempt_sales" placeholder="0.00" oninput="calculateTotals()"></td>
+            </tr>
+            <tr>
+              <td>Zero-Rated Sales:</td>
+              <td><input type="text" id="zero-rated-sales" name="zero_rated_sales" placeholder="0.00" oninput="calculateTotals()"></td>
+            </tr>
+            <tr>
+              <td>Total Sales:</td>
+              <td><input type="text" id="total-sales" name="total_sales" placeholder="0.00" readonly></td>
+            </tr>
+            <tr>
+              <td>VAT (12%):</td>
+              <td><input type="text" id="vat-12" name="vat_12" placeholder="0.00" readonly></td>
+            </tr>
+            <tr>
+              <td>Invoice Discount Amount:</td>
+              <td><input type="text" id="invoice-discount" name="invoice_discount" placeholder="0.00" oninput="calculateTotals()"></td>
+            </tr>
+            <tr>
+              <td>Amount Inclusive of VAT:</td>
+              <td><input type="text" id="amt-incl-vat" name="amt_incl_vat" placeholder="0.00" readonly></td>
+            </tr>
+            <tr>
+              <td>% of EWT:</td>
+              <td><input type="text" id="ewt-percent" name="ewt_percent" placeholder="0%" oninput="calculateTotals()"></td>
+            </tr>
+            <tr>
+              <td>EWT Amount:</td>
+              <td><input type="text" id="ewt-amount" name="ewt_amount" placeholder="0.00" readonly></td>
+            </tr>
+            <tr>
+              <td>Net Amount:</td>
+              <td><input type="text" id="net-amount" name="net_amount" placeholder="0.00" readonly></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Document Attachments (Hide from PDF Print) -->
+        <div class="no-print">
+          <div class="section-title">Document Attachments</div>
+
+          <div class="form-grid">
+            <div class="form-group span-3">
+              <label>Upload Supporting Documents</label>
+              <div class="drop-zone" id="drop-zone">
+                <p>Drag & drop files here, or click to browse</p>
+                <span>Accepted formats: PDF, DOCX, PNG, JPG</span>
+                <input type="file" id="file-input" multiple accept=".pdf,.docx,.png,.jpg,.jpeg" style="display: none;">
+              </div>
+              <ul class="file-list" id="file-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="bottom-actions-bar no-print">
+          <div class="btn-row">
+            <button type="button" class="btn btn-print" onclick="generatePDF()">Generate PDF</button>
+            <button type="button" class="btn btn-download-all" id="download-all-btn" onclick="combinePDF()">Download All Files</button>
+          </div>
+          <span id="submit-status" class="submit-status"></span>
+        </div>
+
+      </div>
+
+      <!-- Full-Bleed Footer Banner -->
+      <div class="footer-banner">
+        <span class="footer-phone">8819-BELO (2356)</span>
+        <a href="https://www.belomed.com" class="footer-link" target="_blank">www.belomed.com</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Libraries used only for the "Download All Files" compiled PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <script>
+  let selectedFiles = [];
+
+  function parseNum(val) {
+    if (!val) return 0;
+    let cleaned = val.toString().replace(/[^0-9.-]/g, '');
+    let parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  function formatNum(val) {
+    return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // ---------------------------------------------------------------------
+  // Auto-shrink-to-fit text (used on the Item Description field)
+  // ---------------------------------------------------------------------
+  // Shrinks the input's font-size in small steps until the text no longer
+  // overflows the field's visible width, so long descriptions stay fully
+  // visible instead of getting clipped. Grows back toward the max size
+  // when the user deletes text, and never goes below AUTOFIT_MIN_PX so text
+  // doesn't become unreadable.
+  const AUTOFIT_DEFAULT_MAX_PX = 13; // matches the default `input` font-size
+  let autofitMaxPx = AUTOFIT_DEFAULT_MAX_PX; // lowered while fitting to one page
+  const AUTOFIT_MIN_PX = 6;
+  const AUTOFIT_STEP_PX = 0.5;
+
+  function autofitText(el) {
+    if (!el) return;
+    // Reset to max first so we always measure from a clean baseline —
+    // otherwise a field that was shrunk and then had text removed would
+    // stay small forever.
+    el.style.fontSize = autofitMaxPx + 'px';
+
+    let size = autofitMaxPx;
+    while (el.scrollWidth > el.clientWidth && size > AUTOFIT_MIN_PX) {
+      size -= AUTOFIT_STEP_PX;
+      el.style.fontSize = size + 'px';
+    }
+  }
+
+  function autofitAllDescriptions() {
+    document.querySelectorAll('#table-body .desc').forEach(autofitText);
+  }
+
+  // Re-fit every description field if the table's available width changes
+  // (e.g. browser window resize).
+  window.addEventListener('resize', autofitAllDescriptions);
+
+  // ---------------------------------------------------------------------
+  // One-page fit for PDF output
+  // ---------------------------------------------------------------------
+  // Each level tightens the layout a bit more:
+  // [row font px, row padding px, summary font px, summary padding px, gap px]
+  const FIT_LEVELS = [
+    [12, 6,   12, 4,   15],
+    [11, 4,   11, 3,   12],
+    [10, 3,   10, 2,   10],
+    [9,  2,   9,  1.5, 8],
+    [8,  1,   8,  1,   6],
+    [7,  0.5, 7,  0.5, 4]
+  ];
+
+  function clearFit(pageEl) {
+    pageEl.removeAttribute('data-fit');
+    ['--fit-font', '--fit-pad', '--fit-sum-font', '--fit-sum-pad', '--fit-gap']
+      .forEach(p => pageEl.style.removeProperty(p));
+    const content = pageEl.querySelector('.form-content');
+    content.style.transform = '';
+    content.style.width = '';
+  }
+
+  // fit = { level: -1 (no change) .. FIT_LEVELS.length-1, scale: 0.5..1 }
+  function applyFit(pageEl, fit, refit) {
+    clearFit(pageEl);
+    autofitMaxPx = AUTOFIT_DEFAULT_MAX_PX;
+    if (fit.level >= 0) {
+      const [rf, rp, sf, sp, gap] = FIT_LEVELS[fit.level];
+      pageEl.setAttribute('data-fit', fit.level);
+      pageEl.style.setProperty('--fit-font', rf + 'px');
+      pageEl.style.setProperty('--fit-pad', rp + 'px');
+      pageEl.style.setProperty('--fit-sum-font', sf + 'px');
+      pageEl.style.setProperty('--fit-sum-pad', sp + 'px');
+      pageEl.style.setProperty('--fit-gap', gap + 'px');
+      autofitMaxPx = rf;
+      if (fit.scale < 1) {
+        const content = pageEl.querySelector('.form-content');
+        content.style.width = (100 / fit.scale) + '%';
+        content.style.transform = `scale(${fit.scale})`;
+      }
+    }
+    if (refit) autofitAllDescriptions();
+  }
+
+  // Finds the gentlest settings that make everything fit on one 11in page.
+  // Measures in the same layout used for PDF output (no-print hidden,
+  // footer pinned, borderless inputs), then restores the screen layout.
+  function computeFit(pageEl) {
+    const noPrintEls = Array.from(pageEl.querySelectorAll('.no-print'));
+    noPrintEls.forEach(el => el.style.display = 'none');
+    pageEl.classList.add('pdf-capture-mode');
+
+    const footer = pageEl.querySelector('.footer-banner');
+    const content = pageEl.querySelector('.form-content');
+    const summary = pageEl.querySelector('.summary-container');
+    const limit = 11 * 96 - footer.offsetHeight - 6;
+
+    const measure = () => {
+      const top = pageEl.getBoundingClientRect().top;
+      return {
+        contentTop: content.getBoundingClientRect().top - top,
+        bottom: summary.getBoundingClientRect().bottom - top
+      };
+    };
+
+    let result = { level: -1, scale: 1 };
+    try {
+      for (let i = -1; i < FIT_LEVELS.length; i++) {
+        applyFit(pageEl, { level: i, scale: 1 }, true);
+        const m = measure();
+        if (m.bottom <= limit) {
+          result = { level: i, scale: 1 };
+          break;
+        }
+        if (i === FIT_LEVELS.length - 1) {
+          // Still too tall at the tightest level: scale the content block down.
+          const scale = Math.max(0.5, (limit - m.contentTop) / (m.bottom - m.contentTop));
+          result = { level: i, scale };
+        }
+      }
+    } finally {
+      clearFit(pageEl);
+      pageEl.classList.remove('pdf-capture-mode');
+      noPrintEls.forEach(el => el.style.display = '');
+      autofitMaxPx = AUTOFIT_DEFAULT_MAX_PX;
+      autofitAllDescriptions();
+    }
+    return result;
+  }
+
+  function updateRowAmount(row, manualOverride = false) {
+    if (manualOverride) {
+      calculateTotals();
+      return;
+    }
+    const qty = parseNum(row.querySelector('.qty').value);
+    const price = parseNum(row.querySelector('.price').value);
+    const discount = parseNum(row.querySelector('.discount').value);
+
+    const amountInput = row.querySelector('.amount');
+    const total = (qty * price) - discount;
+
+    amountInput.value = total !== 0 ? formatNum(total) : '';
+    calculateTotals();
+  }
+
+  // ---------------------------------------------------------------------
+  // Core Accounting Formulas
+  // ---------------------------------------------------------------------
+  // Total Sales       = Total Line Amount (sum of the item table's
+  //                     Amount column)
+  // VAT-Exempt Sales  = entered manually
+  // Zero-Rated Sales  = entered manually
+  // Vatable Sales     = Total Sales - VAT-Exempt Sales
+  // VAT Amount (12%)  = Vatable Sales * 0.12
+  // Amount Incl. VAT  = Total Sales + VAT Amount
+  // EWT Amount        = Total Sales * EWT %
+  // Net Amount        = Amount Inclusive of VAT - Invoice Discount Amount
+  //                      - EWT Amount + Zero-Rated Sales
+  //
+  // Example: Total Line Amount 12,500.00, VAT-Exempt Sales 2,500.00,
+  // Zero-Rated Sales 500.00, EWT % 1%, Invoice Discount 200.00 ->
+  //   Total Sales    = 12,500.00
+  //   Vatable Sales  = 12,500.00 - 2,500.00        = 10,000.00
+  //   VAT Amount     = 10,000.00 * 0.12             = 1,200.00
+  //   Amt Incl. VAT  = 12,500.00 + 1,200.00          = 13,700.00
+  //   EWT Amount     = 12,500.00 * 0.01              = 125.00
+  //   Net Amount     = 13,700.00 - 200.00 - 125.00 + 500.00 = 13,875.00
+  function calculateTotals() {
+    // Total Sales = Total Line Amount — sum of the item table's Amount column.
+    let totalSales = 0;
+    document.querySelectorAll('#table-body .amount').forEach(input => {
+      totalSales += parseNum(input.value);
+    });
+    document.getElementById('total-sales').value = totalSales ? formatNum(totalSales) : '';
+
+    // VAT-Exempt Sales is entered manually.
+    const vatExempt = parseNum(document.getElementById('vat-exempt-sales').value);
+
+    // Zero-Rated Sales is entered manually.
+    const zeroRated = parseNum(document.getElementById('zero-rated-sales').value);
+
+    // Vatable Sales = Total Sales - VAT-Exempt Sales.
+    const vatSales = Math.max(0, totalSales - vatExempt);
+    document.getElementById('vatable-sales').value = vatSales ? formatNum(vatSales) : '';
+
+    // VAT Amount = Vatable Sales * 0.12.
+    const vat12 = vatSales * 0.12;
+
+    // Amount Inclusive of VAT = Total Sales + VAT Amount.
+    const amtInclVat = totalSales + vat12;
+
+    // EWT Amount = Total Sales * EWT %.
+    const ewtPercent = parseNum(document.getElementById('ewt-percent').value);
+    const ewtAmount = totalSales * (ewtPercent / 100);
+
+    // Net Amount = Amount Inclusive of VAT - Invoice Discount Amount
+    //              - EWT Amount + Zero-Rated Sales.
+    const invoiceDiscount = parseNum(document.getElementById('invoice-discount').value);
+    const netAmount = amtInclVat - invoiceDiscount - ewtAmount + zeroRated;
+
+    document.getElementById('vat-12').value = vat12 ? formatNum(vat12) : '';
+    document.getElementById('amt-incl-vat').value = amtInclVat ? formatNum(amtInclVat) : '';
+    document.getElementById('ewt-amount').value = ewtAmount ? formatNum(ewtAmount) : '';
+    document.getElementById('net-amount').value = netAmount ? formatNum(netAmount) : '';
+  }
+
+  function addRow() {
+    const tbody = document.getElementById('table-body');
+    const tr = document.createElement('tr');
+    tr.className = 'item-row';
+
+    tr.innerHTML = `
+      <td><input type="number" name="item_qty[]" class="qty" placeholder="0" oninput="updateRowAmount(this.closest('tr'))"></td>
+      <td><input type="text" name="item_unit[]" class="unit" placeholder="pc/box"></td>
+      <td>
+        <input list="item-description-list" name="item_desc[]" class="desc autofit-text" placeholder="Select or type description..." oninput="autofitText(this)">
+      </td>
+      <td>
+        <select name="item_currency[]" class="currency">
+          <option value="PHP">PHP</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="JPY">JPY</option>
+        </select>
+      </td>
+      <td><input type="text" name="item_price[]" class="price" placeholder="0.00" oninput="updateRowAmount(this.closest('tr'))"></td>
+      <td><input type="text" name="item_discount[]" class="discount" placeholder="0.00" oninput="updateRowAmount(this.closest('tr'))"></td>
+      <td><input type="text" name="item_amount[]" class="amount" placeholder="0.00" oninput="updateRowAmount(this.closest('tr'), true)"></td>
+      <td class="no-print" style="text-align: center;">
+        <button type="button" class="btn btn-remove" onclick="removeRow(this)">X</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+
+    // Also fit on selection from the datalist (change) and on blur, since
+    // picking a datalist option or losing focus doesn't always fire input
+    // consistently across browsers.
+    const descInput = tr.querySelector('.desc');
+    descInput.addEventListener('change', () => autofitText(descInput));
+    descInput.addEventListener('blur', () => autofitText(descInput));
+
+    calculateTotals();
+  }
+
+  function removeRow(button) {
+    const row = button.closest('tr');
+    row.remove();
+    calculateTotals();
+  }
+
+  // ---------------------------------------------------------------------
+  // Required-field validation
+  // ---------------------------------------------------------------------
+  // Header fields that must be filled before PDF generation/download.
+  const REQUIRED_HEADER_FIELD_IDS = ['vendor', 'tin', 'invoice-no', 'invoice-date'];
+  // Line-item fields that must be filled on every row in the item table.
+  const REQUIRED_ROW_FIELD_CLASSES = ['qty', 'unit', 'desc', 'currency', 'price'];
+
+  function clearFieldErrors() {
+    document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  }
+
+  // Returns true if the form is valid. Highlights every missing field in red
+  // and shows a status message; scrolls/focuses the first missing field.
+  function validateForm() {
+    clearFieldErrors();
+    let isValid = true;
+    let firstInvalidEl = null;
+
+    REQUIRED_HEADER_FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value || !el.value.toString().trim()) {
+        el.classList.add('field-error');
+        isValid = false;
+        if (!firstInvalidEl) firstInvalidEl = el;
+      }
+    });
+
+    const rows = document.querySelectorAll('#table-body .item-row');
+    if (rows.length === 0) {
+      isValid = false;
+    }
+
+    rows.forEach(row => {
+      REQUIRED_ROW_FIELD_CLASSES.forEach(cls => {
+        const input = row.querySelector('.' + cls);
+        if (!input || !input.value || !input.value.toString().trim()) {
+          if (input) input.classList.add('field-error');
+          isValid = false;
+          if (!firstInvalidEl && input) firstInvalidEl = input;
+        }
+      });
+    });
+
+    const status = document.getElementById('submit-status');
+    if (!isValid) {
+      status.textContent = rows.length === 0
+        ? 'Please add at least one line item and fill in all required fields (highlighted in red).'
+        : 'Please fill in all required fields (highlighted in red).';
+      status.className = 'submit-status error';
+      if (firstInvalidEl) {
+        firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalidEl.focus();
+      }
+    } else {
+      status.textContent = '';
+      status.className = 'submit-status';
+    }
+
+    return isValid;
+  }
+
+  // Clear the red error state on a field as soon as the user fills it in.
+  document.getElementById('vendor-form').addEventListener('input', function(e) {
+    const target = e.target;
+    if (target.classList.contains('field-error') && target.value && target.value.toString().trim()) {
+      target.classList.remove('field-error');
+    }
+  });
+
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const fileList = document.getElementById('file-list');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    });
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    const files = Array.from(e.dataTransfer.files);
+    addFiles(files);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    addFiles(files);
+    fileInput.value = '';
+  });
+
+  function addFiles(files) {
+    const allowedExtensions = ['pdf', 'docx', 'png', 'jpg', 'jpeg'];
+    files.forEach(file => {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (allowedExtensions.includes(ext)) {
+        selectedFiles.push(file);
+      } else {
+        alert(`File type .${ext} is not supported.`);
+      }
+    });
+    renderFileList();
+  }
+
+  function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderFileList();
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+      const li = document.createElement('li');
+      li.className = 'file-item';
+      li.innerHTML = `
+        <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+        <span class="remove-file" onclick="removeFile(${index})">&times;</span>
+      `;
+      fileList.appendChild(li);
+    });
+  }
+
+  function generatePDF() {
+    if (!validateForm()) {
+      return;
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        if (input.checked) input.setAttribute('checked', 'checked');
+        else input.removeAttribute('checked');
+      } else {
+        input.setAttribute('value', input.value);
+      }
+    });
+
+    document.querySelectorAll('select').forEach(select => {
+      const val = select.value;
+      select.querySelectorAll('option').forEach(opt => {
+        if (opt.value === val) opt.setAttribute('selected', 'selected');
+        else opt.removeAttribute('selected');
+      });
+    });
+
+    // Work out how much the layout must tighten to fit one page, and apply
+    // it temporarily so the cloned print document inherits it.
+    const pageEl = document.querySelector('.page');
+    const fit = computeFit(pageEl);
+    applyFit(pageEl, fit, true);
+
+    // Bake the auto-fit font-size into an inline style attribute so it
+    // survives being cloned into the print window below (cloneNode copies
+    // inline style="" text, which is what actually carries the fit size
+    // over — reading el.style.fontSize alone wouldn't transfer).
+    document.querySelectorAll('#table-body .desc').forEach(el => {
+      el.setAttribute('style', (el.getAttribute('style') || '') + `;font-size:${el.style.fontSize};`);
+    });
+
+    const printDoc = document.documentElement.cloneNode(true);
+    printDoc.querySelectorAll('.no-print').forEach(el => el.remove());
+    // Don't re-run the page scripts in the print window (its onload
+    // would add an extra empty row and break the one-page fit).
+    printDoc.querySelectorAll('script').forEach(el => el.remove());
+
+    // Restore the on-screen layout.
+    clearFit(pageEl);
+    autofitMaxPx = AUTOFIT_DEFAULT_MAX_PX;
+    autofitAllDescriptions();
+
+    const printWin = window.open('', '_blank');
+    if (!printWin) {
+      alert('Please allow pop-ups for this site to generate the PDF.');
+      return;
+    }
+
+    printWin.document.open();
+    printWin.document.write('<!DOCTYPE html><html>' + printDoc.innerHTML + '</html>');
+    printWin.document.close();
+
+    printWin.onload = function() {
+      printWin.focus();
+      printWin.print();
+      printWin.close();
+    };
+
+    setTimeout(() => {
+      printWin.focus();
+      printWin.print();
+    }, 500);
+  }
+
+  // Renders the form itself (page 1) as a letter-size PDF page (or pages,
+  // if the content genuinely runs longer than one page) using
+  // html2canvas + jsPDF. While capturing, the .page element temporarily
+  // gets 'pdf-capture-mode', which mirrors the same @media print overrides
+  // Generate PDF uses (footer pinned to the true bottom instead of
+  // flex-pushed, borderless inputs) — so this output matches Generate PDF
+  // instead of drifting from the on-screen layout. The one-page fit
+  // (computeFit/applyFit) is applied during capture as well.
+  async function renderFormAsPdfBytes() {
+    const pageEl = document.querySelector('.page');
+    const fit = computeFit(pageEl);
+
+    const noPrintEls = Array.from(pageEl.querySelectorAll('.no-print'));
+    noPrintEls.forEach(el => el.style.display = 'none');
+    pageEl.classList.add('pdf-capture-mode');
+    applyFit(pageEl, fit, true);
+
+    let canvas;
+    try {
+      canvas = await html2canvas(pageEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+    } finally {
+      clearFit(pageEl);
+      noPrintEls.forEach(el => el.style.display = '');
+      pageEl.classList.remove('pdf-capture-mode');
+      autofitMaxPx = AUTOFIT_DEFAULT_MAX_PX;
+      autofitAllDescriptions();
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pageWidthIn = 8.5;
+    const pageHeightIn = 11;
+    const pageHeightPx = (pageHeightIn / pageWidthIn) * canvas.width;
+
+    // How many physical pages this content needs. Rounding (rather than
+    // "does it exceed 11in by more than X") is what actually kills the
+    // blank-page bug: any capture that's merely a few px over or under a
+    // whole number of pages — normal rendering noise — rounds back to
+    // that whole number, so noise can never mint an extra near-blank
+    // page. Real multi-row overflow (content genuinely ~2 pages tall)
+    // still rounds to 2 and gets a real second page.
+    const numPages = Math.max(1, Math.round(canvas.height / pageHeightPx));
+
+    const formPdfDoc = new jsPDF({ unit: 'in', format: 'letter', orientation: 'portrait' });
+
+    for (let i = 0; i < numPages; i++) {
+      const startPx = i * pageHeightPx;
+      const sliceHeightPx = (i === numPages - 1)
+        ? canvas.height - startPx   // last page takes whatever remains
+        : pageHeightPx;
+
+      let imgData, drawHeightIn;
+      if (numPages === 1) {
+        // Single page: draw the capture as-is, clamped to 11in — no
+        // slicing needed, so no risk of introducing a seam or extra page.
+        imgData = canvas.toDataURL('image/jpeg', 0.95);
+        drawHeightIn = Math.min((canvas.height * pageWidthIn) / canvas.width, pageHeightIn);
+      } else {
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = canvas.width;
+        sliceCanvas.height = sliceHeightPx;
+        sliceCanvas.getContext('2d').drawImage(
+          canvas, 0, startPx, canvas.width, sliceHeightPx,
+          0, 0, canvas.width, sliceHeightPx
+        );
+        imgData = sliceCanvas.toDataURL('image/jpeg', 0.95);
+        drawHeightIn = (sliceHeightPx * pageWidthIn) / canvas.width;
+      }
+
+      if (i > 0) formPdfDoc.addPage();
+      formPdfDoc.addImage(imgData, 'JPEG', 0, 0, pageWidthIn, drawHeightIn);
+    }
+
+    return formPdfDoc.output('arraybuffer');
+  }
+
+  // Forces a page to display in portrait orientation. Accounts for any
+  // rotation the page already carries so a page that's landscape only
+  // because of its /Rotate flag (not just its raw MediaBox) is still
+  // caught correctly.
+  function ensurePortrait(page) {
+    const { degrees } = PDFLib;
+    const { width, height } = page.getSize();
+    const currentAngle = ((page.getRotation().angle % 360) + 360) % 360;
+    const swapped = currentAngle === 90 || currentAngle === 270;
+    const visualWidth = swapped ? height : width;
+    const visualHeight = swapped ? width : height;
+    if (visualWidth > visualHeight) {
+      page.setRotation(degrees((currentAngle + 90) % 360));
+    }
+  }
+
+  // Compiles the generated form (as page 1) together with every attached
+  // file into a single PDF and downloads it. PDF and image attachments are
+  // merged in as real pages; other formats (e.g. DOCX) can't be rendered
+  // in-browser, so a placeholder note page is added for those instead.
+  async function combinePDF() {
+    if (!validateForm()) {
+      return;
+    }
+
+    const btn = document.getElementById('download-all-btn');
+    const status = document.getElementById('submit-status');
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = 'Compiling...';
+    status.textContent = '';
+    status.className = 'submit-status';
+
+    try {
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+      const masterPdf = await PDFDocument.create();
+
+      // 1. Form itself goes first.
+      const formPdfBytes = await renderFormAsPdfBytes();
+      const formDoc = await PDFDocument.load(formPdfBytes);
+      const formPages = await masterPdf.copyPages(formDoc, formDoc.getPageIndices());
+      formPages.forEach(p => {
+        masterPdf.addPage(p);
+        ensurePortrait(p);
+      });
+
+      // 2. Then each attached file, in the order they were added.
+      const skipped = [];
+      for (const file of selectedFiles) {
+        const ext = file.name.split('.').pop().toLowerCase();
+        const buffer = await file.arrayBuffer();
+
+        if (ext === 'pdf') {
+          const attachedDoc = await PDFDocument.load(buffer, { ignoreEncryption: true });
+          const pages = await masterPdf.copyPages(attachedDoc, attachedDoc.getPageIndices());
+          pages.forEach(p => {
+            masterPdf.addPage(p);
+            ensurePortrait(p);
+          });
+
+        } else if (ext === 'png' || ext === 'jpg' || ext === 'jpeg') {
+          const img = ext === 'png'
+            ? await masterPdf.embedPng(buffer)
+            : await masterPdf.embedJpg(buffer);
+
+          const maxW = 612, maxH = 792; // US Letter in points, portrait
+          const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+          const w = img.width * scale, h = img.height * scale;
+
+          const page = masterPdf.addPage([612, 792]);
+          page.drawImage(img, { x: (612 - w) / 2, y: (792 - h) / 2, width: w, height: h });
+
+        } else {
+          // e.g. .docx — can't be rendered into a PDF page in-browser.
+          skipped.push(file.name);
+          const page = masterPdf.addPage([612, 792]);
+          const font = await masterPdf.embedFont(StandardFonts.HelveticaBold);
+          const regular = await masterPdf.embedFont(StandardFonts.Helvetica);
+          page.drawText('Attached file (not embedded):', { x: 50, y: 740, size: 12, font });
+          page.drawText(file.name, { x: 50, y: 715, size: 11, font: regular, color: rgb(0.2, 0.2, 0.2) });
+          page.drawText('This file format cannot be merged into the PDF automatically.', { x: 50, y: 690, size: 9, font: regular });
+          page.drawText('Please share it separately alongside this document.', { x: 50, y: 675, size: 9, font: regular });
+        }
+      }
+
+      const mergedBytes = await masterPdf.save();
+      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const vendorName = (document.getElementById('vendor').value || 'Vendor_Form').replace(/[^a-z0-9]+/gi, '_');
+      a.download = `${vendorName}_Compiled.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      status.textContent = skipped.length
+        ? `Downloaded. Note: ${skipped.join(', ')} couldn't be embedded (placeholder page added).`
+        : 'Compiled PDF downloaded.';
+      status.className = 'submit-status ok';
+
+    } catch (err) {
+      status.textContent = 'Failed: ' + err.message;
+      status.className = 'submit-status error';
+      alert('Error compiling PDF: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+  }
+
+  window.onload = function() {
+    addRow();
+  };
+  </script>
+</body>
+</html>
